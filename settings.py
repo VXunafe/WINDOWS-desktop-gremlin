@@ -17,6 +17,7 @@ class Settings:
     FrameHeight = 200
     Ammo = 5
     LastPlayed: Dict[str, datetime.datetime] = {}
+    MoveSpeed = 5
 
 
 class MouseSettings:
@@ -83,3 +84,8 @@ class AnimationStates:
     IsFiring_Right = False
     IsReload = False
     IsPat = False
+
+    IsWalkingUp = False
+    IsWalkingDown = False
+    IsWalkingLeft = False
+    IsWalkingRight = False

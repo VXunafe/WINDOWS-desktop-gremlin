@@ -11,6 +11,7 @@ from PySide6.QtMultimedia import QSoundEffect
 
 import settings
 import sprite_manager
+from movement_handler import MovementHandler
 
 
 class GremlinWindow(QWidget):
@@ -25,6 +26,7 @@ class GremlinWindow(QWidget):
             Qt.WindowType.Tool                      # Don't show in taskbar
         )
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFixedSize(
             settings.Settings.FrameWidth + 215,
             settings.Settings.FrameHeight + 30
@@ -61,6 +63,9 @@ class GremlinWindow(QWidget):
         self.idle_timer.timeout.connect(self.idle_timer_tick)
 
         self.close_timer = None
+
+        # --- @! Other tools -------------------------------------------------------------
+        self.movement_handler = MovementHandler()
 
         # --- @! Start -------------------------------------------------------------------
         self.setup_tray_icon()
@@ -127,7 +132,29 @@ class GremlinWindow(QWidget):
             if c.Pat == 0:
                 a.IsPat = False
 
-        if a.IsHover and not a.IsDragging and not a.IsSleeping:
+        if a.IsWalking and not a.IsDragging and not a.IsPat and not a.IsSleeping:
+            current_pos = self.pos()
+            move_x = current_pos.x()
+            move_y = current_pos.y()
+
+            if a.IsWalkingLeft:
+                c.WalkLeft = self.play_animation(
+                    sprite_manager.get("left"), c.WalkLeft, f.Left)
+            elif a.IsWalkingRight:
+                c.WalkRight = self.play_animation(
+                    sprite_manager.get("right"), c.WalkRight, f.Right)
+            elif a.IsWalkingUp:
+                c.WalkUp = self.play_animation(
+                    sprite_manager.get("backward"), c.WalkUp, f.Up)
+            elif a.IsWalkingDown:
+                c.WalkDown = self.play_animation(
+                    sprite_manager.get("forward"), c.WalkDown, f.Down)
+
+            # apply the new position to the window
+            dx, dy = self.movement_handler.getVelocity()
+            self.move(move_x + dx, move_y + dy)
+
+        if a.IsHover and not a.IsDragging and not a.IsSleeping and not a.IsWalking:
             c.Hover = self.play_animation(
                 sprite_manager.get("hover"), c.Hover, f.Hover)
             a.IsPat = False
@@ -152,7 +179,7 @@ class GremlinWindow(QWidget):
         if (not a.IsSleeping and not a.IsIntro and not a.IsDragging and
             not a.IsWalkIdle and not a.IsClick and not a.IsHover and
             not a.IsFiring_Left and not a.IsFiring_Right and
-                s.Ammo > 0 and not a.IsPat):
+                s.Ammo > 0 and not a.IsPat and not a.IsWalking):
 
             c.Idle = self.play_animation(
                 sprite_manager.get("idle"), c.Idle, f.Idle)
@@ -175,9 +202,6 @@ class GremlinWindow(QWidget):
             if c.RightFire == 0:
                 a.IsFiring_Right = False
                 s.Ammo -= 1
-
-        # I would have implemented the FollowCursor logic here if I used X11.
-        # Unfortunately for many of you, however, I use Wayland.
 
     def play_sound(self, file_name, delay_seconds=0):
         """ Plays a sound, respecting the LastPlayed delay. """
@@ -297,8 +321,44 @@ class GremlinWindow(QWidget):
             settings.CurrentFrames.Grab = 0
             self.play_sound("run.wav")
 
+    def keyPressEvent(self, event):
+        """ Handles keyboard controls when window is focused (on hover). """
+        if event.isAutoRepeat():
+            return
+
+        # only start walking if not in a conflicting state
+        a = settings.AnimationStates
+        if a.IsDragging or a.IsPat or a.IsSleeping or a.IsClick:
+            return
+
+        prev_walking = a.IsWalking
+        self.movement_handler.recordKeyPress(event)
+        self.movement_handler.transferAnimationState(a)
+
+        if a.IsWalking:
+            if not prev_walking:
+                self.play_sound("run.wav")
+            self.reset_idle_timer()
+
+    def keyReleaseEvent(self, event):
+        """ Handles key releases to stop walking. """
+        if event.isAutoRepeat():
+            return
+
+        a = settings.AnimationStates
+        self.movement_handler.recordKeyRelease(event)
+        self.movement_handler.transferAnimationState(a)
+
+        if not a.IsWalking:
+            c = settings.CurrentFrames
+            c.WalkUp = c.WalkDown = c.WalkLeft = c.WalkRight = 0
+            # re-enable hover animation if mouse is still over
+            if self.underMouse():
+                a.IsHover = True
+
     def enterEvent(self, event):
         """ Handles mouse enter event. """
+        self.setFocus()
         a = settings.AnimationStates
         if not a.IsIntro and not a.IsWalking:
             a.IsHover = True
@@ -307,9 +367,13 @@ class GremlinWindow(QWidget):
 
     def leaveEvent(self, event):
         """ Handles mouse leave event. """
+        self.clearFocus()
+        a = settings.AnimationStates
         if not settings.AnimationStates.IsIntro:
-            settings.AnimationStates.IsHover = False
+            a.IsHover = False
             settings.CurrentFrames.Hover = 0
+        self.movement_handler.recordMouseLeave()
+        self.movement_handler.transferAnimationState(a)
 
     # --- @! Hotspot Click Handlers ------------------------------------------------------
 
