@@ -1,0 +1,14 @@
+{
+    "Intro": 56,
+    "Idle": 340,
+    "Left": 18,
+    "Right": 18,
+    "Up": 18,
+    "Down": 18,
+    "Outro": 35,
+    "Grab": 60,
+    "WalkIdle": 55,
+    "Click": 120,
+    "Hover": 60,
+    "Sleep": 74
+}
