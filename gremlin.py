@@ -29,28 +29,28 @@ class GremlinWindow(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setFixedSize(
-            settings.Settings.FrameWidth + 215,
-            settings.Settings.FrameHeight + 30
+            settings.Settings.FrameWidth,
+            settings.Settings.FrameHeight
         )
 
         # --- @! Main Sprite Display -----------------------------------------------------
         self.sprite_label = QLabel(self)
         self.sprite_label.setGeometry(
-            105, 5, settings.Settings.FrameWidth, settings.Settings.FrameHeight)
+            0, 0, settings.Settings.FrameWidth, settings.Settings.FrameHeight)
         self.sprite_label.setScaledContents(True)
 
         # --- @! Hotspots ----------------------------------------------------------------
-        self.left_hotspot = QWidget(self)
-        self.left_hotspot.setGeometry(110, 95, 60, 85)
-        self.left_hotspot.mousePressEvent = self.left_hotspot_click
+        # self.left_hotspot = QWidget(self)
+        # self.left_hotspot.setGeometry(110, 95, 60, 85)
+        # self.left_hotspot.mousePressEvent = self.left_hotspot_click
 
-        self.right_hotspot = QWidget(self)
-        self.right_hotspot.setGeometry(280, 95, 60, 85)
-        self.right_hotspot.mousePressEvent = self.right_hotspot_click
+        # self.right_hotspot = QWidget(self)
+        # self.right_hotspot.setGeometry(280, 95, 60, 85)
+        # self.right_hotspot.mousePressEvent = self.right_hotspot_click
 
-        self.top_hotspot = QWidget(self)
-        self.top_hotspot.setGeometry(160, 0, 135, 50)
-        self.top_hotspot.mousePressEvent = self.top_hotspot_click
+        # self.top_hotspot = QWidget(self)
+        # self.top_hotspot.setGeometry(160, 0, 135, 50)
+        # self.top_hotspot.mousePressEvent = self.top_hotspot_click
 
         # --- @! Sound Player ------------------------------------------------------------
         self.sound_player = QSoundEffect(self)
