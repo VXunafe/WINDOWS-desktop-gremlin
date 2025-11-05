@@ -13,8 +13,8 @@ https://github.com/user-attachments/assets/eeb75510-9725-4f3a-a259-0959ddc22603
     - **Walk**: ⌨️ ~Cursor-following does not work in Wayland 🥺🥺🥺~. So hover your mouse over the gremlins, then use W/A/S/D to make 'em skedaddle 💨💨.
     - **Secret Move:** 💃 Right-click to see what happens. (It's Mambo time 😎😎)
     - **Headpats:** 🖐️ You can pat their head by clicking the top hotspot. (Still looking for a Mambo patting animation, send help.)
-- Also, the gremlins will make some ✨noises✨ when you interact with them 🥰🥰 Show 'em some love!
-- **🚨🚨SECRETS!!🚨🚨** If you leave the gremlins lonely for so long, they will occasionally make more ✨noises✨ to annoy you 😈😈. Think of it as *"1 hour of silence occasionally broken up by Mambo"*.
+- The gremlins will make some ✨noises✨ when you interact with them 🥰🥰 Show 'em some love!
+- Also, if you leave the gremlins lonely for so long, they will occasionally make more ✨noises✨ to annoy you 😈😈. Think of it as *"1 hour of silence occasionally broken up by Mambo"*.
 
 > Note 1: The *"1 hour of silence occasionally broken up by Mambo"* feature can be turned off (if you are a chicken 🐔🐔). See the "Customize your Gremlins!" section below.
 >
