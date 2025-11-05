@@ -1,4 +1,6 @@
 {
+    "FrameRate": 60,
+    "SpriteColumn": 5,
     "Idle": "idle.png",
     "Hover": "hover.png",
     "Click": "click.png",

@@ -70,7 +70,7 @@ class GremlinWindow(QWidget):
         # --- @! Start -------------------------------------------------------------------
         self.setup_tray_icon()
         self.play_sound("intro.wav")
-        self.master_timer.start(1000 // settings.Settings.FrameRate)
+        self.master_timer.start(1000 // settings.SpriteMap.FrameRate)
         self.idle_timer.start(120 * 1000)
 
     # --- @! State Machine Core -------------------------------------------------------
@@ -143,8 +143,9 @@ class GremlinWindow(QWidget):
             return current_frame
 
         s = settings.Settings
-        x = (current_frame % s.SpriteColumn) * s.FrameWidth
-        y = (current_frame // s.SpriteColumn) * s.FrameHeight
+        cols = settings.SpriteMap.SpriteColumn
+        x = (current_frame % cols) * s.FrameWidth
+        y = (current_frame // cols) * s.FrameHeight
 
         # check bounds
         if x + s.FrameWidth > sheet.width() or y + s.FrameHeight > sheet.height():
@@ -296,7 +297,7 @@ class GremlinWindow(QWidget):
 
         self.close_timer = QTimer(self)
         self.close_timer.timeout.connect(self.outro_tick)
-        self.close_timer.start(1000 // settings.Settings.FrameRate)
+        self.close_timer.start(1000 // settings.SpriteMap.FrameRate)
 
     def outro_tick(self):
         s = settings

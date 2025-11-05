@@ -24,8 +24,6 @@ class Settings:
     # Why do I use "Matikanetannhauser" instead of "Mambo", you might ask?
     # Well, my name is iluvgirlswithglasses, what do you expect about my length preferences?
     StartingChar = "Matikanetannhauser"
-    SpriteColumn = 5
-    FrameRate = 60
     FollowRadius = 150.0
     FrameWidth = 200
     FrameHeight = 200
@@ -49,6 +47,8 @@ I'll implement such generalization later.
 
 
 class SpriteMap:
+    FrameRate = 60
+    SpriteColumn = 5
     Idle = None
     Hover = None
     Click = None
