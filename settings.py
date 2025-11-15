@@ -19,6 +19,9 @@ class State(Enum):
     SLEEPING = auto()
     OUTRO = auto()
     EMOTE = auto()
+    LEFT_ACTION = auto()
+    RIGHT_ACTION = auto()
+    RELOAD = auto()
 
 
 class Settings:
@@ -60,6 +63,9 @@ class SpriteMap:
     FrameWidth = None
     TopHotspotHeight = None
     TopHotspotWidth = None
+    SideHotspotHeight = None
+    SideHotspotWidth = None
+    HasReloadAnimation = False
     Idle = None
     Hover = None
     Click = None
@@ -77,6 +83,9 @@ class SpriteMap:
     DownRight = None
     WalkIdle = None
     Pat = None
+    LeftAction = None
+    RightAction = None
+    Reload = ""
     Emote = None
 
 
@@ -98,6 +107,9 @@ class FrameCounts:
     DownRight = None
     WalkIdle = None
     Pat = None
+    LeftAction = None
+    RightAction = None
+    Reload = None
     Emote = None
 
 
@@ -119,4 +131,7 @@ class CurrentFrames:
     DownRight = 0
     WalkIdle = 0
     Pat = 0
+    LeftAction = 0
+    RightAction = 0
+    Reload = 0
     Emote = 0

@@ -12,7 +12,7 @@ from PySide6.QtMultimedia import QSoundEffect
 
 import settings
 import sprite_manager
-from hotspot_geometry import compute_top_hotspot_geometry
+from hotspot_geometry import *
 from movement_handler import MovementHandler, reset_all_walk_frames
 from settings import State
 
@@ -42,9 +42,22 @@ class GremlinWindow(QWidget):
         self.sprite_label.setScaledContents(True)
 
         # --- @! Hotspots ----------------------------------------------------------------
+        self.top_hotspot = QWidget(self)
+        self.top_hotspot.setGeometry(*compute_top_hotspot_geometry())
+        self.top_hotspot.mousePressEvent = self.top_hotspot_click
+
         self.left_hotspot = QWidget(self)
-        self.left_hotspot.setGeometry(*compute_top_hotspot_geometry())
-        self.left_hotspot.mousePressEvent = self.top_hotspot_click
+        self.left_hotspot.setGeometry(*compute_left_hotspot_geometry())
+        self.left_hotspot.mousePressEvent = self.left_hotspot_click
+
+        self.right_hotspot = QWidget(self)
+        self.right_hotspot.setGeometry(*compute_right_hotspot_geometry())
+        self.right_hotspot.mousePressEvent = self.right_hotspot_click
+
+        # --- @! Reload animation for Blue Archive gremlins ------------------------------
+        self.has_reload = settings.SpriteMap.HasReloadAnimation
+        if self.has_reload:
+            self.ammo = 6
 
         # --- @! Sound Player ------------------------------------------------------------
         self.sound_player = QSoundEffect(self)
@@ -105,15 +118,14 @@ class GremlinWindow(QWidget):
             return
 
         # --- @! handle timers on state exit ---------------------------------------------
-        # if we are leaving the WALK_IDLE state, stop the timer so it doesn't fire.
-        if self.current_state == State.WALK_IDLE:
-            self.walk_idle_timer.stop()
+        # except the intro and outro, all states with timers should stop them on exit
+        match self.current_state:
+            case State.WALK_IDLE:
+                self.walk_idle_timer.stop()
+            case State.EMOTE:
+                self.emote_duration_timer.stop()
 
-        # if we are leaving the EMOTE state, stop the duration timer
-        if self.current_state == State.EMOTE:
-            self.emote_duration_timer.stop()
-
-        # --- @! handle SFX on state entry -----------------------------------------------
+        # --- @! handle state entry ------------------------------------------------------
         match new_state:
             case State.DRAGGING:
                 self.play_sound("grab.wav")
@@ -126,6 +138,17 @@ class GremlinWindow(QWidget):
                 self.play_sound("mambo.wav")
             case State.PAT:
                 self.play_sound("pat.wav")
+            case State.LEFT_ACTION:
+                self.play_sound("fire.wav")
+                if self.has_reload:
+                    self.ammo -= 1
+            case State.RIGHT_ACTION:
+                self.play_sound("fire.wav")
+                if self.has_reload:
+                    self.ammo -= 1
+            case State.RELOAD:
+                self.play_sound("reload.wav")
+                self.ammo = 6
             case State.EMOTE:
                 self.play_sound("emote.wav")
                 emote_duration = settings.EmoteConfig.EmoteDuration
@@ -159,6 +182,12 @@ class GremlinWindow(QWidget):
                 c.Emote = 0
             case State.SLEEPING:
                 c.Sleep = 0
+            case State.LEFT_ACTION:
+                c.LeftAction = 0
+            case State.RIGHT_ACTION:
+                c.RightAction = 0
+            case State.RELOAD:
+                c.Reload = 0
 
     # --- @! Animations ------------------------------------------------------------------
 
@@ -239,6 +268,25 @@ class GremlinWindow(QWidget):
                 c.Emote = self.play_animation(
                     sprite_manager.get(m.Emote), c.Emote, f.Emote)
 
+            case State.LEFT_ACTION:
+                c.LeftAction = self.play_animation(
+                    sprite_manager.get(m.LeftAction), c.LeftAction, f.LeftAction)
+                if c.LeftAction == 0:
+                    self.handle_reload_check()
+
+            case State.RIGHT_ACTION:
+                c.RightAction = self.play_animation(
+                    sprite_manager.get(m.RightAction), c.RightAction, f.RightAction)
+                if c.RightAction == 0:
+                    self.handle_reload_check()
+
+            case State.RELOAD:
+                c.Reload = self.play_animation(
+                    sprite_manager.get(m.Reload), c.Reload, f.Reload)
+                if c.Reload == 0:
+                    next_state = State.HOVER if self.underMouse() else State.IDLE
+                    self.set_state(next_state)
+
             case State.OUTRO:
                 # this state is handled by outro_tick, but we stop master_timer
                 # so this case is just a failsafe.
@@ -262,6 +310,13 @@ class GremlinWindow(QWidget):
         dx, dy = self.movement_handler.getVelocity()
         if dx != 0 or dy != 0:
             self.move(self.pos().x() + dx, self.pos().y() + dy)
+
+    def handle_reload_check(self):
+        """ Checks if we need to reload after a left/right action. """
+        if self.has_reload and self.ammo <= 0:
+            self.set_state(State.RELOAD)
+        else:
+            self.set_state(State.HOVER if self.underMouse() else State.IDLE)
 
     def play_sound(self, file_name, delay_seconds=0):
         """ Plays a sound, respecting the LastPlayed delay. """
@@ -489,15 +544,21 @@ class GremlinWindow(QWidget):
         # if in WALK_IDLE, do nothing. The timer will handle the transition.
 
     # --- @! Hotspot Click Handlers ------------------------------------------------------
+    def on_hotspot_click(self, event, state):
+        block_states = [
+            State.DRAGGING, State.CLICK, State.SLEEPING, State.EMOTE, State.RELOAD
+        ]
+        if event.button() == Qt.MouseButton.LeftButton:
+            if self.current_state not in block_states:
+                self.reset_idle_timer()
+                self.reset_emote_timer()
+                self.set_state(state)
 
     def top_hotspot_click(self, event):
-        if event.button() == Qt.MouseButton.LeftButton:
-            if self.current_state not in [State.DRAGGING, State.CLICK, State.SLEEPING, State.EMOTE]:
-                self.reset_idle_timer()
-                self.set_state(State.PAT)
+        self.on_hotspot_click(event, State.PAT)
 
     def left_hotspot_click(self, event):
-        pass  # firing removed
+        self.on_hotspot_click(event, State.LEFT_ACTION)
 
     def right_hotspot_click(self, event):
-        pass  # firing removed
+        self.on_hotspot_click(event, State.RIGHT_ACTION)

@@ -5,6 +5,9 @@
     "FrameWidth": 350,
     "TopHotspotHeight": 175,
     "TopHotspotWidth": 150,
+    "SideHotspotHeight": 150,
+    "SideHotspotWidth": 100,
+    "HasReloadAnimation": true,
     "Idle": "idle.png",
     "Hover": "hover.png",
     "Click": "click.png",
@@ -22,5 +25,8 @@
     "DownRight": "forward.png",
     "WalkIdle": "wIdle.png",
     "Pat": "pat.png",
+    "LeftAction": "fireL.png",
+    "RightAction": "fireR.png",
+    "Reload": "reload.png",
     "Emote": "intro.png"
 }
