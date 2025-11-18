@@ -348,7 +348,7 @@ class GremlinWindow(QWidget):
         """ Plays a sound, respecting the LastPlayed delay. """
         path = os.path.join(
             settings.BASE_DIR, "sounds", settings.Settings.StartingChar.lower(), file_name)
-        if not os.path.exists(path):
+        if not os.path.exists(path) or os.path.isdir(path):
             return
 
         if delay_seconds > 0:
