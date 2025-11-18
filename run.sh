@@ -3,6 +3,13 @@
 USE_UV=1
 USE_VENV=0
 
+run_detached() {
+    # Run the command in background (&), silence output, and disown the PID
+    "$@" >/dev/null 2>&1 &
+    disown $!
+    exit 0
+}
+
 # Find python and pip
 PYTHON=$(command -v python3 || command -v python) || { echo "Python not found"; exit 1; }
 PIP=$(command -v pip3 || command -v pip || command -v uv) || { echo "pip/uv not found"; exit 1; }
@@ -32,12 +39,12 @@ cd "$(dirname "$0")"
 
 # Auto: try uv first
 if [ $USE_UV -eq 1 ] && command -v uv >/dev/null 2>&1; then
-    exec uv run python -m src.launcher "$@"
+    run_detached uv run python -m src.launcher "$@"
 fi
 
 # Explicit --system
 if [ $USE_VENV -eq 0 ]; then
-    exec $PYTHON -m src.launcher "$@"
+    run_detached $PYTHON -m src.launcher "$@"
 fi
 
 # Explicit --venv
@@ -46,7 +53,7 @@ if [ $USE_VENV -eq 1 ]; then
     . venv/bin/activate
     PYTHON=$(command -v python)  # Update PYTHON to venv python
     $PYTHON -m pip install pyside6
-    exec $PYTHON -m src.launcher "$@"
+    run_detached $PYTHON -m src.launcher "$@"
 fi
 
 # Fallback: venv if PySide6 missing
@@ -57,4 +64,4 @@ if ! $PYTHON -c "import PySide6" 2>/dev/null; then
     $PYTHON -m pip install -q pyside6
 fi
 
-exec $PYTHON -m src.launcher "$@"
+run_detached $PYTHON -m src.launcher "$@"
