@@ -6,7 +6,7 @@ setlocal EnableDelayedExpansion
 :menu
 echo IF UV HAS NOT MADE A VENV YET, PLEASE WAIT, IT MAY SEEM LIKE IT ISN'T DOING ANYTHING FOR A WHILE
 echo BUT IT IS EXTREMELY LIKELY IT IS CREATING AN ENVIRONMENT TO RUN.
-timeout /t 10 >nul
+timeout /t 5 >nul
 cls
 @echo off
 type mambo.txt
@@ -102,6 +102,5 @@ goto menu
 
 :exit
 exit /b
-
 
 
