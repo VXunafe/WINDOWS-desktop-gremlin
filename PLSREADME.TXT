@@ -1,6 +1,9 @@
 Hi, I'm VXunafe, I made this very barebones port for fun; and as long as the original creator doesn't do any drastic changes this should work indefinitely
 (drastic being file structure, python script changes that dont work with windows, and names of files)
 
+also this is technically a re-port, i just wanted to use python to run it rather than downloading multiple different characters.
+No shade to the og creator!!
+
 To run properly use MAIN-MENU.bat, as it simplifies all of the functionality ❤️
 
                     ██▓▓▓▓▓███                                       ██▓▓▓▓▓▓███                    
@@ -57,4 +60,5 @@ To run properly use MAIN-MENU.bat, as it simplifies all of the functionality ❤
               ▓▓▓▓▓▓▓▓▓▓█   ██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▓▓▒▒▒▓▓▓▒▒▒▒▒▒▒▓▓▒░░░░░░░░░▒█                          
               ▓▓▓▓▓     ████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▒░░░░░░▒▓▓▓▓██                        
               ▓▓▓▓       █▓▓▓▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒▒▒▓▓▓▓▓▒▒▒▒▒▒▒▒▒▒░▒▓██                     
+
               █▓▓▓       █▓▓▓▓▓▓▓▓▒▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░▒▓▓▓▓▓▒░▒▓▒░░░░░▒▓█                   
