@@ -3,16 +3,26 @@ title Gremlin Launcher
 mode con: cols=70 lines=20
 setlocal EnableDelayedExpansion
 
-:menu
+:loadwarn
+cls
 echo IF UV HAS NOT MADE A VENV YET, PLEASE WAIT, IT MAY SEEM LIKE IT ISN'T DOING ANYTHING FOR A WHILE
 echo BUT IT IS EXTREMELY LIKELY IT IS CREATING AN ENVIRONMENT TO RUN.
+echo.
+echo the script will load momentarily.
 timeout /t 5 >nul
 cls
 @echo off
-type mambo.txt
+type mambo.txt 
 echo.
-echo ======================================================
-echo     THANK YOU FOR USING THIS SIMPLE WINDOWS PORT!
+echo loading...
+timeout /t 3 >nul
+goto menu
+
+:menu
+cls
+echo.
+@echo off
+type art.txt
 echo.
 echo   [1] Start Main Script (starts with default gremlin)
 echo   [2] Select Gremlin
@@ -102,5 +112,3 @@ goto menu
 
 :exit
 exit /b
-
-
