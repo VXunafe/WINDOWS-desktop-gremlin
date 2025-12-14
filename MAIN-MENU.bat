@@ -29,6 +29,8 @@ echo   [2] Select Gremlin
 echo   [3] End Gremlin Task
 echo   [4] Help
 echo.
+echo   [Config] edit the config options
+echo.
 echo   [Q] Quit
 echo ======================================================
 set /p choice=Select an option: 
@@ -37,12 +39,57 @@ if /i "%choice%"=="1" goto start_main
 if /i "%choice%"=="2" goto select_gremlin
 if /i "%choice%"=="3" goto kill
 if /i "%choice%"=="4" goto help
-if /i "%choice%"=="Q" goto exit
+if /i "%choice%"=="Q" goto 
+if /i "%choice%"=="config" goto confedit
 
 echo.
 echo Invalid option. Please try again.
 timeout /t 2 >nul
 goto menu
+
+:confedit
+cls
+echo.
+echo =NOW EDITING CONFIG=
+echo.
+timeout /t 1 >nul
+@echo off
+setlocal EnableDelayedExpansion
+
+set /p CHAR=Default character: 
+
+set /p SYSTRAY=Set to sys tray? (Y/N): 
+if /I "%SYSTRAY%"=="Y" (
+    set SYSTRAY_VAL=true
+) else (
+    set SYSTRAY_VAL=false
+)
+
+set /p EMOTE_ENABLE=Enable emote key? (Y/N): 
+if /I "%EMOTE_ENABLE%"=="Y" (
+    set EMOTE_ENABLED=true
+    set /p EMOTE_KEY=Set emote key:
+) else (
+    set EMOTE_ENABLED=false
+    set EMOTE_KEY=P
+)
+
+set /p VOLUME=Volume (0.1 - 1.0): 
+
+(
+echo {
+echo     "StartingChar": "%CHAR%",
+echo     "Systray": %SYSTRAY_VAL%,
+echo     "FollowRadius": 150.0,
+echo     "EmoteKeyEnabled": %EMOTE_ENABLED%,
+echo     "EmoteKey": "%EMOTE_KEY%",
+echo     "Volume": %VOLUME%
+echo }
+) > config.json
+
+echo.
+echo config.json written successfully!
+goto return_menu
 
 :start_main
 cls
