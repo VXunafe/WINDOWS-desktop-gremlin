@@ -8,8 +8,9 @@ cls
 echo IF UV HAS NOT MADE A VENV YET, PLEASE WAIT, IT MAY SEEM LIKE IT ISN'T DOING ANYTHING FOR A WHILE
 echo BUT IT IS EXTREMELY LIKELY IT IS CREATING AN ENVIRONMENT TO RUN.
 echo.
-echo the script will load momentarily.
-timeout /t 5 >nul
+echo the script will load when ready.
+echo.
+pause
 cls
 @echo off
 type mambo.txt 
@@ -29,7 +30,7 @@ echo   [2] Select Gremlin
 echo   [3] End Gremlin Task
 echo   [4] Help
 echo.
-echo   [Config] edit the config options
+echo   [Conf] Edit The Config Options
 echo.
 echo   [Q] Quit
 echo ======================================================
@@ -40,7 +41,7 @@ if /i "%choice%"=="2" goto select_gremlin
 if /i "%choice%"=="3" goto kill
 if /i "%choice%"=="4" goto help
 if /i "%choice%"=="Q" goto 
-if /i "%choice%"=="config" goto confedit
+if /i "%choice%"=="conf" goto confedit
 
 echo.
 echo Invalid option. Please try again.
@@ -55,6 +56,12 @@ echo.
 timeout /t 1 >nul
 @echo off
 setlocal EnableDelayedExpansion
+set /p AvailList=List available characters(Y/N)?:
+if /i "%AvailList%"=="Y" (
+    dir /b %~d0spritesheet
+)
+
+echo.
 
 set /p CHAR=Default character: 
 
