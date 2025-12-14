@@ -1,7 +1,4 @@
-# FYI
-for the extra sprites, i got them from :
-https://github.com/TRKako !!!!!!!!!!!!!!
--------------------------------------------
+
 # Linux Desktop Gremlins!
 
 Basically [KurtVelasco's Desktop Gremlin](https://github.com/KurtVelasco/Desktop_Gremlin), but re-written in PySide + Qt6.
