@@ -4,6 +4,9 @@ mode con: cols=70 lines=20
 setlocal EnableDelayedExpansion
 
 :menu
+IF UV HAS NOT MADE A VENV YET, PLEASE WAIT, IT MAY SEEM LIKE IT ISN'T DOING ANYTHING FOR A WHILE
+BUT IT IS EXTREMELY LIKELY IT IS CREATING AN ENVIRONMENT TO RUN.
+timeout /t 5 >nul
 cls
 @echo off
 type mambo.txt
@@ -99,3 +102,4 @@ goto menu
 
 :exit
 exit /b
+
