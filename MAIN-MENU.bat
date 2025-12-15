@@ -3,6 +3,29 @@ title Gremlin Launcher
 mode con: cols=70 lines=20
 setlocal EnableDelayedExpansion
 
+:uvcheck
+@echo off
+
+where uv >nul 2>nul
+if errorlevel 1 goto uvnotinstalled
+
+echo UV is installed.
+timeout /t 1 >nul
+goto :loadwarn
+
+:uvnotinstalled
+echo UV is NOT installed.
+timeout /t 5 >nul
+cls
+echo installing UV...
+powershell.exe -NoProfile -ExecutionPolicy RemoteSigned -File "%~dp0uvInstall.ps1" %*
+cls
+echo UV finished installing!
+echo please wait...
+timeout /t 3 >nul
+goto :loadwarn
+
+
 :loadwarn
 cls
 echo IF UV HAS NOT MADE A VENV YET, PLEASE WAIT, IT MAY SEEM LIKE IT ISN'T DOING ANYTHING FOR A WHILE
