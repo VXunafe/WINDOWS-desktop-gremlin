@@ -3,6 +3,23 @@ title Gremlin Launcher
 mode con: cols=70 lines=20
 setlocal EnableDelayedExpansion
 
+:checkver
+where python >nul 2>nul (
+    echo python is installed.
+)
+if errorlevel 1 (
+    echo python not installed...
+    echo skipping update check.
+    timeout /t 5 >nul
+    goto uvcheck)
+
+py vCheck.py
+if errorlevel 1 (
+    echo file may not be found, or python is not installed, skipping version check.
+)
+timeout /t 1 >nul
+goto uvcheck
+
 :uvcheck
 @echo off
 
